@@ -131,3 +131,6 @@ dmypy.json
 #Files types
 .*pdf
 .*parquet
+
+#lock
+.~lock.*
