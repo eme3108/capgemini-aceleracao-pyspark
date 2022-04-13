@@ -76,7 +76,8 @@ def samplesGiven(df, quant, price):
 def frequentProduct(df):
 	print("Question 4")
 	return (df.filter(~(F.col('InvoiceNo').startswith('C') & 
-						(F.col("Quantity") > 0)))
+						(F.col("Quantity") > 0)) &
+						(F.col('StockCode') != 'PADS'))
 				.groupBy('Description')
 					.agg(totalSold(df))
 					.agg(F.max(
@@ -95,7 +96,8 @@ def frequentProductMonth(df, time):
 		df_month = df_month.union(df.filter((F.col('Month') == i + 1) & 
 											(F.col('Description').isNotNull()) &
 											(~F.col('InvoiceNo').startswith('C')) &
-											(F.col("Quantity") > 0))
+											(F.col("Quantity") > 0) &
+											(F.col('StockCode') != 'PADS')) 
 				.groupBy('Description', 'Month')
 				.agg(totalSold(df))
 				.agg(F.max(
@@ -112,7 +114,8 @@ def hourMostFrequentSells(df, time):
 	print("Question 6")
 	df = fHour(df, time)
 	return (df.filter((~F.col('InvoiceNo').startswith('C')) & 
-						(F.col("Quantity") > 0))
+						(F.col("Quantity") > 0) &
+						(F.col('StockCode') != 'PADS'))
 				.groupBy('Hour')
 					.agg(F.sum(F.col('Quantity').cast('int')).alias('total_sold'))
 					.agg(F.max(
@@ -126,7 +129,8 @@ def monthMostFrequentSells(df, time):
 	print("Question 7")
 	df = fMonth(df, time)
 	return (df.filter((~F.col('InvoiceNo').startswith('C')) & 
-						(F.col("Quantity") > 0))
+						(F.col("Quantity") > 0) &
+						(F.col('StockCode') != 'PADS'))
 				.groupBy('Month')
 					.agg(F.sum(F.col('Quantity').cast('int')).alias('total_sold'))
 					.agg(F.max(
