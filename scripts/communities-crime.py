@@ -96,8 +96,9 @@ def highestYoungPopCommunity(df):
 		.show(1))
 
 def correlationPoliceBudgetxViolentCrimes(df):
-	corr_polBudg_vioCrim = round(df.corr('PolicOperBudg', 'violent_crimes', 'pearson'), 2)
-	print(f"Correlation between Police Budget and Violent Crimes: {corr_polBudg_vioCrim}.")
+	# corr_polBudg_vioCrim = round(df.corr('PolicOperBudg', 'violent_crimes', 'pearson'), 2)
+	# print(f"Correlation between Police Budget and Violent Crimes: {corr_polBudg_vioCrim}.")
+    df.agg(F.round(F.corr('PolicOperBudg', 'violent_crimes'), 2).alias('Correlation between Police Budget and Violent Crimes')).show()
 
 def correlationWhitePolicexPoliceBudget(df):
 	corr_whitePol_polBudg = round(df.corr('white_police', 'PolicOperBudg', 'pearson'), 2)
@@ -116,17 +117,17 @@ def correlationMedianFamilyIncomeViolentCrimes(df):
 	print(f"Correlation between median family income and violent crimes: {corr_medFamInc_vioCrim}.")
 
 def predominantRaceViolentCrimes(df):
-	(df.select('communityname', 
-				'racepctblack', 
-				'racePctWhite', 
-				'racePctAsian', 
-				'racePctHisp', 
-				F.greatest('racepctblack', 
-							'racePctWhite', 
-							'racePctAsian', 
-							'racePctHisp').alias('predominant_race_perc'))
-		.sort('violent_crimes', ascending = False)
-		.show(10))
+    (df.select('communityname', 
+                'racepctblack', 
+                'racePctWhite', 
+                'racePctAsian', 
+                'racePctHisp', 
+                F.greatest('racepctblack', 
+                           'racePctWhite', 
+                           'racePctAsian', 
+                           'racePctHisp').alias('predominant_race_perc'))
+       .sort('violent_crimes', ascending = False)
+       .show(10))
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -135,7 +136,7 @@ if __name__ == "__main__":
 	df = (spark.getOrCreate().read
 		          .format("csv")
 		          .option("header", "true")
-		          #.schema(schema_communities_crime)
+		        #   .schema(schema_communities_crime)
 		          .load("/home/spark/capgemini-aceleracao-pyspark/data/communities-crime/communities-crime.csv"))
 	# print(df.show())
 
@@ -156,15 +157,15 @@ if __name__ == "__main__":
 	df = asianPct_float(df)
 	df = hispPct_float(df)
 
-	# communityPoliceBudget(df) #Pergunta 1
-	# violentCrimesCommunity(df) #Pergunta 2
-	# populationCommunity(df) #Pergunta 3
-	# highestBlackPop(df) #Pergunta 4
-	# highestPercentWage(df) #Pergunta 5
-	# highestYoungPopCommunity(df) #Pergunta 6
-	# correlationPoliceBudgetxViolentCrimes(df) #Pergunta 7
-	# correlationWhitePolicexPoliceBudget(df) #Pergunta 8
-	# correlationPoliceBudgetPopulation(df) #Pergunta 9
-	# correlationPopulationViolentCrimes(df) #Pergunta 10
-	# correlationMedianFamilyIncomeViolentCrimes(df) #Pergunta 11
-	predominantRaceViolentCrimes(df)
+	communityPoliceBudget(df) #Pergunta 1
+	violentCrimesCommunity(df) #Pergunta 2
+	populationCommunity(df) #Pergunta 3
+	highestBlackPop(df) #Pergunta 4
+	highestPercentWage(df) #Pergunta 5
+	highestYoungPopCommunity(df) #Pergunta 6
+	correlationPoliceBudgetxViolentCrimes(df) #Pergunta 7
+	correlationWhitePolicexPoliceBudget(df) #Pergunta 8
+	correlationPoliceBudgetPopulation(df) #Pergunta 9
+	correlationPopulationViolentCrimes(df) #Pergunta 10
+	correlationMedianFamilyIncomeViolentCrimes(df) #Pergunta 11
+	predominantRaceViolentCrimes(df) #Pergunta 12
